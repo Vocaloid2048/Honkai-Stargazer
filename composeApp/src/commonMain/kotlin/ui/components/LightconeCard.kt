@@ -84,7 +84,6 @@ fun LightconeCard(
     Box(
         modifier = Modifier
             .widthIn(LC_CARD_WIDTH, LC_CARD_WIDTH*2)
-            .aspectRatio(LC_CARD_WIDTH/ LC_CARD_HEIGHT)
             .clip(
                 RoundedCornerShape(
                     topEnd = 15.dp,
@@ -112,26 +111,6 @@ fun LightconeCard(
                         interactionSource = interactionSource
                     )
             ) {
-                /*
-                Image(
-                    bitmap = Lightcone.getLightconeImageFromJSON(
-                        UtilTools.ImageFolderType.LC_ICON,
-                        lightcone.registName!!
-                    ),
-                    contentDescription = "Lightcone Icon",
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f)
-                        .background(
-                            Brush.verticalGradient(
-                                colors = getCardBgColorByRare(lightcone.rarity)
-                            )
-                        ),
-                    contentScale = ContentScale.Crop
-
-                )
-                 */
-
                 AsyncImage(
                     model = newImageRequest(
                         LocalPlatformContext.current,
@@ -167,7 +146,7 @@ fun LightconeCard(
                     color = TextColorNormalDim,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.wrapContentWidth()
+                    modifier = Modifier.widthIn(LC_CARD_WIDTH, LC_CARD_WIDTH*2).wrapContentHeight()
                 )
             }
             Spacer(modifier = Modifier.height(2.dp))

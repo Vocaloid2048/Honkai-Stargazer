@@ -33,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import coil3.compose.LocalPlatformContext
 import files.Res
@@ -146,6 +147,7 @@ fun CharacterCard(
                         textAlign = TextAlign.Center,
                         color = TextColorNormalDim,
                         fontSize = FontSizeNormal12().fontSize,
+                        lineHeight = MATERIAL_CARD_TITLE_HEIGHT.value.sp,
                         maxLines = 1
                     )
 
@@ -155,6 +157,7 @@ fun CharacterCard(
                         textAlign = TextAlign.Center,
                         color = TextColorNormalDim,
                         fontSize = FontSizeNormal12().fontSize,
+                        lineHeight = MATERIAL_CARD_TITLE_HEIGHT.value.sp,
                         maxLines = 1
                     )
                 }

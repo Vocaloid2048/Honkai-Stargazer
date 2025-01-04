@@ -69,7 +69,6 @@ fun RelicCard(
     Box(
         modifier = Modifier
             .widthIn(RELIC_CARD_WIDTH, RELIC_CARD_WIDTH *2)
-            .aspectRatio(RELIC_CARD_WIDTH / RELIC_CARD_HEIGHT)
             .clip(
                 RoundedCornerShape(
                     topEnd = 15.dp,
