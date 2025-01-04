@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import type.Character
+import utils.app.CharWeightList
 import utils.app.Preferences
 
 class SplashPageViewModel() : ViewModel() {
@@ -29,6 +30,7 @@ class SplashPageViewModel() : ViewModel() {
             _state.value.showPopup.value = showPopup
             Character.charListJson
             Character.charExtListJson
+            CharWeightList.update()
         }
     }
 

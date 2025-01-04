@@ -25,17 +25,16 @@ import utils.starbase.StarbaseAPI
 class CharWeightList(){
     companion object{
         const val prefKeyJson = "charWeightListJson"
-        var INSTANCE = Json.parseToJsonElement(Settings().getString(
-            prefKeyJson, Json.encodeToString(
-                getWeightListJson()
-            )))
+        var INSTANCE = Json.parseToJsonElement(
+            readFromFile("charWeightList.json")
+        )
 
         fun update(force : Boolean = false){
             if(!Preferences().CharWeightList.isUpdateCharWeightListNow() && !force) return
             val json = getWeightListJson()
             if(json is JsonObject && json.isNotEmpty()){
                 INSTANCE = json
-                Settings().putString(prefKeyJson, json.toString())
+                writeToFile("charWeightList.json", json.toString())
                 Preferences().CharWeightList.updatedCharWeightList()
                 println("CharWeightList Updated")
             }
