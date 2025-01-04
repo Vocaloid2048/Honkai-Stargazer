@@ -101,7 +101,7 @@ class Constants {
 
         //For Right Corner Page
         val INFO_MIN_WIDTH = 320.dp
-        val INFO_MAX_WIDTH = 450.dp
+        val INFO_MAX_WIDTH = 420.dp
 
         //For Left Corner Page
         val HOME_WIDTH = 390.dp
