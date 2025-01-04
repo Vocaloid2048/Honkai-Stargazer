@@ -2,9 +2,14 @@ package utils.app
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
+import coil3.Image
 import coil3.ImageLoader
 import coil3.PlatformContext
+import coil3.compose.ImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.disk.DiskCache
 import coil3.request.CachePolicy
@@ -35,6 +40,7 @@ import okio.SYSTEM
 import okio.buffer
 import okio.use
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import type.Character
 import type.ImageFolder
@@ -79,12 +85,21 @@ fun newImageLoader(context : PlatformContext, isDebug: Boolean = false): ImageLo
 /**
  * Image Request
  */
-fun newImageRequest(context: PlatformContext, data: Any, crossFade : Boolean = true) = ImageRequest.Builder(context)
-    .data(data)
-    .networkCachePolicy(CachePolicy.ENABLED)
-    .crossfade(crossFade)
-    .diskCachePolicy(CachePolicy.ENABLED)
-    .build()
+lateinit var lostImagePainter: Painter
+fun newImageRequest(context: PlatformContext, data: Any, crossFade : Boolean = true) : ImageRequest {
+    val dataFinal = mutableStateOf(data)
+    return ImageRequest.Builder(context)
+        .data(dataFinal.value)
+        .networkCachePolicy(CachePolicy.ENABLED)
+        .crossfade(crossFade)
+        .diskCachePolicy(CachePolicy.ENABLED)
+        /*
+        .listener(
+            onError = {_,_ -> dataFinal.value = painterResource(LOST_IMAGE_DRAWABLE)},
+        )
+         */
+        .build()
+}
 
 /**
  * Function that use for handling Dec's Format, but I prefer name it as "PrettyCount" :D

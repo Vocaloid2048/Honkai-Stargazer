@@ -6,12 +6,15 @@ import com.voc.stargazer3.BuildKonfig
 import moe.tlaster.precompose.PreComposeApp
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.rememberNavigator
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import ui.function.splashPage.SplashPage
 import ui.navigation.RootContent
 import ui.navigation.Screen
+import utils.app.Constants.Companion.LOST_IMAGE_DRAWABLE
 import utils.app.LogExportInit
 import utils.app.Stargazer3Theme
+import utils.app.lostImagePainter
 import utils.app.newImageLoader
 
 @Composable
@@ -22,6 +25,7 @@ import utils.app.newImageLoader
          * - Display specific screen as the login in Figma Design expect
          */
 fun App() {
+    lostImagePainter = painterResource(LOST_IMAGE_DRAWABLE)
     setSingletonImageLoaderFactory { context ->
         newImageLoader(
             context,
