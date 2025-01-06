@@ -85,7 +85,6 @@ fun newImageLoader(context : PlatformContext, isDebug: Boolean = false): ImageLo
 /**
  * Image Request
  */
-lateinit var lostImagePainter: Painter
 fun newImageRequest(context: PlatformContext, data: Any, crossFade : Boolean = true) : ImageRequest {
     val dataFinal = mutableStateOf(data)
     return ImageRequest.Builder(context)
