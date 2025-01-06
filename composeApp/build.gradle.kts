@@ -150,7 +150,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.voc.honkaistargazer"
+    namespace = "com.voc.stargazer3"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
@@ -158,7 +158,7 @@ android {
     sourceSets["main"].resources.srcDirs("src/commonMain/resources")
 
     defaultConfig {
-        applicationId = "com.voc.honkaistargazer"
+        applicationId = "com.voc.stargazer3"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = versionCodeFinal

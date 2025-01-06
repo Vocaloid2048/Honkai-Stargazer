@@ -1,4 +1,4 @@
-package com.voc.honkaistargazer
+package com.voc.stargazer3
 
 import App
 import android.content.Context
