@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -183,7 +184,6 @@ fun InfoAdviceRelic(charWeightData : JsonObject? = null) {
 
         //Must rewrite if later extend to multi choices of one relic index
         for(adviceAttr in charWeightData.jsonObject["advice_relic_attr"]!!.jsonArray){
-
             if (adviceAttr !is JsonObject
                 || adviceAttr.jsonObject["propertyName"] == null
                 || adviceAttr.jsonObject["propertyName"]!!.jsonPrimitive.content == ""
@@ -198,13 +198,8 @@ fun InfoAdviceRelic(charWeightData : JsonObject? = null) {
             }
         }
         for(adviceAttr in charWeightData.jsonObject["advice_relic_sub"]!!.jsonArray){
-            if (adviceAttr !is JsonObject
-                || adviceAttr.jsonObject["propertyName"] == null
-                || adviceAttr.jsonObject["propertyName"]!!.jsonPrimitive.content == "") {
-                continue
-            } else {
-                adviceAttrSubList.add(Attribute.valueOf(adviceAttr.jsonPrimitive.content))
-            }
+            if(adviceAttr.jsonPrimitive.content == "") continue
+            adviceAttrSubList.add(Attribute.valueOf(adviceAttr.jsonPrimitive.content))
         }
     }
 
@@ -377,20 +372,23 @@ fun InfoAdviceRelic(charWeightData : JsonObject? = null) {
                     Spacer(Modifier.height(10.dp))
 
                     VerticalGrid(
-                        modifier = Modifier.fillMaxWidth().widthIn(Constants.INFO_MIN_WIDTH, Constants.INFO_MAX_WIDTH).wrapContentHeight(),
+                        modifier = Modifier.fillMaxWidth().widthIn(Constants.INFO_MIN_WIDTH, Constants.INFO_MAX_WIDTH).wrapContentHeight().align(Alignment.CenterHorizontally),
                         columns = SimpleGridCells.Fixed(2),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ){
-                        for(subAttr in adviceAttrSubList){
+
+                        for((index, attr) in adviceAttrList.withIndex()){
                             Row(Modifier.fillMaxWidth().wrapContentHeight()){
                                 Text(
-                                    removeStrQuote(Res.string.SubAffix),
+                                    removeStrQuote(relicPart[index]),
                                     fontWeight = FontWeight.Bold,
-                                    style = FontSizeNormal16(),
+                                    style = FontSizeNormal14(),
                                     color = TextColorNormalDim
                                 )
                                 Spacer(Modifier.width(10.dp))
                                 Text(
-                                    text = removeStrQuote(subAttr.resName),
+                                    text = removeStrQuote(attr.second.resName),
                                     style = FontSizeNormal14(),
                                     color = TextColorNormalDimCC,
                                     textAlign = TextAlign.End,
@@ -424,6 +422,8 @@ fun InfoAdviceRelic(charWeightData : JsonObject? = null) {
             }
         }
     }
+
+    Spacer(modifier = Modifier.height(24.dp))
 }
 
 

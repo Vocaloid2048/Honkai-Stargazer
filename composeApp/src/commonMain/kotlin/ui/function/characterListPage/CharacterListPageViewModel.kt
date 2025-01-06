@@ -32,6 +32,7 @@ class CharacterListPageViewModel(private val navigator: Navigator) : ViewModel()
             //val showPopup = !Preferences().AppSettings.isLangInitialized()
             //_state.value.showPopup.value = showPopup
             _state.value.characterList.value =
+                //TODO : Modify this as Try-Catch to prevent directly crash when "{}"
                 (Character.charListJson as JsonArray).map { jsonElement ->
                     (Character.getCharacterItemFromJSON(jsonElement.jsonObject["charId"]?.jsonPrimitive?.content!!, requireAttrData = true))
                 } as ArrayList<Character>
