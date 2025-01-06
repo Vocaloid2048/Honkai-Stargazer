@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.listSaver
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.Dp
 import coil3.Image
@@ -30,9 +32,14 @@ import io.ktor.http.ContentType
 import io.ktor.http.contentType
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.util.network.UnresolvedAddressException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.IO
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withTimeout
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonElement
 import okio.FileHandle
 import okio.FileSystem
 import okio.IOException
@@ -212,44 +219,61 @@ fun getAssetsJsonByFilePath(filePath: String): String {
     return readFromFile(filePath)
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun writeToFile(filePath: String, content: String) {
-    val fileSystem = FileSystem.SYSTEM
-    val file = FileSystem.SYSTEM_TEMPORARY_DIRECTORY.resolve("data").resolve(filePath)
+    return runBlocking {
+        val job = async(Dispatchers.IO){
+            val fileSystem = FileSystem.SYSTEM
+            val file = FileSystem.SYSTEM_TEMPORARY_DIRECTORY.resolve("data").resolve(filePath)
 
-    try {
-        // Create directory if it doesn't exist
-        fileSystem.createDirectories(file.parent!!, mustCreate = false)
+            try {
+                // Create directory if it doesn't exist
+                fileSystem.createDirectories(file.parent!!, mustCreate = false)
 
-        // Write to file
-        fileSystem.openReadWrite(file).use { fileHandle ->
-            fileHandle.sink().buffer().use { sink ->
-                sink.writeUtf8(content)
+                // Write to file
+                fileSystem.openReadWrite(file).use { fileHandle ->
+                    fileHandle.sink().buffer().use { sink ->
+                        sink.writeUtf8(content)
+                    }
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
             }
         }
-    } catch (e: IOException) {
-        e.printStackTrace()
+        job.await()
+        job.getCompleted()
     }
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 fun readFromFile(filePath: String): String {
-    val fileSystem = FileSystem.SYSTEM
-    val file = FileSystem.SYSTEM_TEMPORARY_DIRECTORY.resolve("data").resolve(filePath)
+    return runBlocking {
+        val job = async(Dispatchers.IO){
+            val fileSystem = FileSystem.SYSTEM
+            val file = FileSystem.SYSTEM_TEMPORARY_DIRECTORY.resolve("data").resolve(filePath)
 
-    try {
-        // Read from file
-        if(!fileSystem.exists(file)){
-            val data = readFromOnlineURL(StarbaseAPI().getGitHubStaticAssetURL() + "/data/${filePath}")
-            writeToFile(filePath, data)
-            return data
+            try {
+                // Read from file
+                if(!fileSystem.exists(file)){
+                    val data = readFromOnlineURL(StarbaseAPI().getGitHubStaticAssetURL() + "/data/${filePath}")
+                    writeToFile(filePath, data)
+                    return@async data
+                }
+                return@async fileSystem.source(file).buffer().use { source ->
+                    source.readUtf8()
+                }
+            } catch (e: IOException) {
+                errLog("UtilTools.kt", "readFromFile", e)
+                return@async "{}"
+            }
         }
-        return fileSystem.source(file).buffer().use { source ->
-            source.readUtf8()
-        }
-    } catch (e: IOException) {
-        errLog("UtilTools.kt", "readFromFile", e)
-        return "{}"
+        job.await()
+        job.getCompleted()
     }
 }
+
+
+
 
 /**
  * Read from Online URL
@@ -289,6 +313,11 @@ fun readFromOnlineURL(url: String): String {
     }
     return "{}"
 }
+
+val JsonElementSaver: Saver<JsonElement, Any> = listSaver(
+    save = { listOf(it.toString()) },
+    restore = { Json.parseToJsonElement(it[0]) }
+)
 
 @VersionUpdateCheck
 fun getIconByUserAccountIconValue(icon : String): Any {

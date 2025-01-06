@@ -42,7 +42,9 @@ import ui.components.defaultHeaderData
 import ui.function.characterInfoPage.CharacterInfoPage
 import ui.function.characterListPage.CharacterListPage
 import ui.function.homePage.HomePage
+import ui.function.lightconeInfoPage.LightconeInfoPage
 import ui.function.lightconeListPage.LightconeListPage
+import ui.function.relicInfoPage.RelicInfoPage
 import ui.function.relicListPage.RelicListPage
 import utils.app.BezierEasing2O48
 import utils.app.Constants.Companion.HOME_WIDTH
@@ -250,6 +252,32 @@ fun NavHostInit(navigator : Navigator, isPadMode: MutableState<Boolean>){
         ) { backStackEntry ->
             withBGScreen(isPadMode){
                 CharacterInfoPage(
+                    navigator = navigator,
+                    headerData = Screen.CharacterInfoPage.headerData,
+                    backStackEntry = backStackEntry
+                )
+            }
+        }
+
+        scene(
+            //?fileName={fileName}&path={path}
+            route = "${Screen.LightconeInfoPage.route}/{lcName}",
+        ) { backStackEntry ->
+            withBGScreen(isPadMode){
+                LightconeInfoPage(
+                    navigator = navigator,
+                    headerData = Screen.CharacterInfoPage.headerData,
+                    backStackEntry = backStackEntry
+                )
+            }
+        }
+
+        scene(
+            //?fileName={fileName}
+            route = "${Screen.RelicInfoPage.route}/{relicName}",
+        ) { backStackEntry ->
+            withBGScreen(isPadMode){
+                RelicInfoPage(
                     navigator = navigator,
                     headerData = Screen.CharacterInfoPage.headerData,
                     backStackEntry = backStackEntry
